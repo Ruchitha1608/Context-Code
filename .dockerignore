@@ -1,0 +1,17 @@
+.venv-mcp/
+.venv/
+.dual-graph/
+__pycache__/
+*.pyc
+*.pyo
+.git/
+.github/
+.claude/
+data/
+comparison/
+docs/
+examples/
+license/
+.env
+*.sample
+.DS_Store
