@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+# dgc — ContextKit launcher for Claude Code
+#
+# Usage:
+#   dgc                          # scan current directory, start claude
+#   dgc /path/to/project         # scan given project, start claude
+#   dgc /path/to/project "task"  # scan and start with a prompt
+#   dgc audit [project_path]     # vibe code health report
+
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Pass audit subcommand directly — launch script expects it as $1
+if [[ "${1:-}" == "audit" ]]; then
+  exec "$SCRIPT_DIR/contextkit_launch.sh" audit "${@:2}"
+fi
+
+exec "$SCRIPT_DIR/contextkit_launch.sh" claude "$@"
