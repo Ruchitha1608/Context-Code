@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# dg — ContextKit launcher for Codex CLI
+#
+# Usage:
+#   dg                          # scan current directory, start codex
+#   dg /path/to/project         # scan given project, start codex
+#   dg /path/to/project "task"  # scan and start with a prompt
+
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+if [[ "${1:-}" == "audit" ]]; then
+  exec "$SCRIPT_DIR/contextkit_launch.sh" audit "${@:2}"
+fi
+
+exec "$SCRIPT_DIR/contextkit_launch.sh" codex "$@"
