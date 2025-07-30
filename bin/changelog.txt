@@ -1,0 +1,351 @@
+3.9.91
+- Fixed: leaderboard and admin stats now correctly separate Claude, Codex, and Contextkit runtime usage
+
+3.9.90
+- Fix: dgc --opencode now force-downloads fresh contextkit.ps1 before delegation (fixes stale cache)
+
+3.9.89
+- Fix: contextkit --opencode / --cursor / --gemini / --copilot now work on Windows (param binding fix)
+
+3.9.88
+- Fix: dgc --opencode (and --cursor, --gemini, --copilot, --codex) now delegates correctly on Windows
+
+3.9.87
+- Fix leaderboard: restore token sync and opt-in endpoint
+
+3.9.86
+- Windows ARM64: add native compiled wheel support
+
+3.9.85
+- Windows: force wheel reinstall to replace sdist build
+
+3.9.84
+- Improved context engine performance
+
+3.9.83
+- Improved context engine performance
+
+3.9.82
+- Improved context engine performance
+
+3.9.81
+- Improved context engine performance
+
+3.9.80
+- Added: Leaderboard opt-in prompt and token ping for Windows (ckc.ps1) — parity with Mac/Linux
+- Fixed: Windows users can now appear on contextkit.dev/leaderboard
+
+3.9.79
+- Fixed: leaderboard token telemetry was reading wrong file — now reads ~/.claude/token-counter/history.json (token-counter MCP's actual output)
+- Fixed: token data now actually reaches the server on every dgc ping
+
+3.9.78
+- Fixed: stdio MCP transport broken when invoked as console script (mcp-graph-server --stdio) — was starting HTTP server instead
+- Fixed: contextkit stuck on "connecting" in Claude Code is now resolved
+
+3.9.77
+- Fixed: contextkit MCP stuck on "connecting" — no longer writes to .mcp.json (avoids conflict with claude mcp add)
+- Fixed: pre-cleanup still strips stale contextkit-pro/contextkit entries from .mcp.json before registration
+
+3.9.76
+- Fixed: "MCP server contextkit already exists in local config" error on repeated dgc runs
+- Fixed: Stale .mcp.json entries (contextkit-pro, old HTTP contextkit) now cleaned up automatically on every dgc launch
+- Fixed: .mcp.json always written with correct stdio config after Claude MCP registration
+
+3.9.75
+- Fixed: dgc --leaderboard re-prompted even when already opted in — now shows update flow only
+- Fixed: wrong license server URL in leaderboard + ping blocks (was contextkit-license, now correct)
+
+3.9.74
+- Added: Public leaderboard (contextkit.dev/leaderboard) — opt in with `dgc --leaderboard`, shows real token usage and cost per user
+- Added: Token telemetry in dgc ping — sends input/output/cache_write/cache_read tokens + cost_usd per model on every run
+- Added: GET /leaderboard API on license server returns live ranked table of opted-in users
+
+3.9.73
+- Added: stdio MCP transport for Claude Code — eliminates port conflicts (no more "address already in use")
+- Fixed: Works with Docker/services on ports 8080/8081/8082 — Claude spawns MCP server directly via stdin/stdout
+- Added: Automatic fallback to HTTP for older Claude CLI versions (backward compatible)
+
+3.9.72
+- Fixed: graph_builder ran all regex (keywords, relations, symbols) on full 300KB content — now truncates to 24KB first; fixes 17+ min scan on large projects (12x speedup)
+- Added: SKIP_DIRS now includes out, .vercel, .turbo, coverage, .cache, storybook-static, .parcel-cache, .webpack, elm-stuff, .gradle, target
+
+3.9.71
+- Added: --no-gitignore flag — skip appending .contextkit/ to .gitignore
+- Added: --context-policy-file <path> flag — write dgc policy to custom path instead of CLAUDE.md (e.g. .claude/CLAUDE.md)
+- Added: --name/-n, --remote-control, --remote-control-session-name-prefix, --tmux, --plugin-url now correctly parsed as value flags
+
+3.9.70
+- Fixed: dgc audit and dg audit now correctly route to contextkit.audit (bin/dgc and bin/dg were missing audit subcommand handler)
+- Fixed: contextkit_launch.sh audit fallback — tries ~/.contextkit/venv before system python3
+
+3.9.69
+- Added: audit.py and undo_shield.py compiled to .so and shipped inside contextkit pip package
+- Changed: install.sh and install.ps1 now pip-install contextkit (includes compiled audit+shield)
+- Changed: dgc audit now invokes compiled contextkit.audit module, not standalone script
+- Changed: Undo Shield hook uses compiled contextkit.undo_shield module
+- Fixed: Cython-incompatible dict[str,set[str]] type annotations in audit.py removed
+- Fixed: undo_shield.py refactored to main() so it is safely importable as a module
+
+3.9.68
+- Added: GitHub Actions cibuildwheel — compiled .so wheels now published to PyPI for Linux x86_64/arm64, macOS x86_64/arm64, Windows AMD64, Python 3.10-3.13
+- Fixed: mcp_graph_server excluded from Cython compilation (async decorators incompatible)
+- Fixed: pyproject.toml now includes *.so in package-data and excludes *.c
+- Added: cibuildwheel config in pyproject.toml (archs, skip, test-command)
+
+3.9.67
+- Fixed: audit.py and undo_shield.py now included in installer and auto-update (were missing from distribution)
+- Fixed: dgc audit path bug — looked for audit.py in home directory instead of install dir
+- Fixed: undo_shield.py and audit.py now uploaded to R2 CDN for reliable delivery
+
+3.9.66
+- Fixed: Vibe Code Auditor debt score now includes missing error handling check (check 7 contributed 0 pts before)
+- Fixed: Vibe Code Auditor fix roadmap now surfaces missing error handling entries
+- Fixed: circular deps DFS marks nodes seen before recursing — eliminates O(V²) re-traversal on large graphs
+- Fixed: Undo Shield threshold raised 2.0 → 4.0 — single file read no longer triggers a warning
+- Fixed: Undo Shield now catches truncate command as a hard destructive operation
+- Fixed: Undo Shield warning now includes bypass hint (DG_UNDO_SHIELD=0)
+- Added: Undo Shield, Vibe Code Auditor (dgc audit), rate limit failover with --model flag
+
+3.9.65
+- Fixed: MCP server now locks to one project per process — graph_scan() with a different path is rejected instead of silently flipping the active project under a running session (fixes wrong-repo cross-talk when running dgc/dg in two terminals)
+- Fixed: stale info_graph.json from a previous project under the same .contextkit dir is detected via stamped root and triggers needs_project=true on graph_continue
+- Added: graph_continue responses now include the active project_root so the model can see which repo it's working against
+
+3.9.64
+- Fixed: MCP server now binds to 127.0.0.1 instead of 0.0.0.0 — eliminates network exposure on shared/VM setups
+- Fixed: all MCP registration URLs, health checks, and hooks use 127.0.0.1 — resolves IPv6 connection failures on Windows
+- Fixed: port availability probe updated to 127.0.0.1 to match server bind address on all platforms
+
+3.9.63
+- Fixed: pin mcp-remote to 0.1.14 — newer versions add OAuth discovery latency causing Codex MCP handshake timeouts
+
+3.9.62
+- Fixed: install script exits on R2 SSL failure due to set -euo pipefail — add || true so GitHub fallback runs
+
+3.9.61
+- Fixed: install fallback to GitHub when R2 returns HTML error page (SSL cert mismatch on some systems)
+
+3.9.60
+- Fixed: Codex subagent MCP handshake failure — register mcp-remote using absolute binary path instead of npx to eliminate startup latency that caused "connection closed: initialize response" in subagent mode
+
+3.9.59
+- Fixed: Gradle/Maven build/ dirs no longer skip source modules named "build"
+
+3.9.57
+- Fixed: shell parse crash on Linux (tr quoting in telemetry/feedback curl) -- use octal escapes
+- Fixed: Gemini CLI not picking up dual graph policy (was writing to CLAUDE.md instead of GEMINI.md)
+- Fixed: launching two assistants on same project kills the first one's MCP server (per-assistant PID/port files)
+- Fixed: Ctrl+C now reliably kills MCP server for CLI assistants (explicit INT/TERM trap)
+
+3.9.56
+- Fixed: "unbound variable _LAUNCH_ARGS" crash when launching assistant without prompt or extra flags (set -u + empty array in bash < 4.4)
+
+3.9.55
+- Fixed: "unbound variable CLAUDE_EXTRA_ARGS" crash when launching without extra flags
+
+3.9.54
+- Added: opt-in telemetry consent -- help us improve contextkit! One-time prompt, no private data or codebase info is ever sent
+- Added: anonymous error reporting (only if you opt in) -- helps us fix crashes faster
+- Added: one-time feedback prompt (only if telemetry enabled)
+- Added: dgc/contextkit now passes all claude CLI flags through (--model, --verbose, --allowedTools, etc.)
+- Added: typo detection for tool names (e.g. contextkit --claud suggests --claude)
+
+3.9.53
+- Fixed: PS5.1 parse crash on R2-served scripts - replaced all remaining UTF-8 em-dashes with ASCII (byte 0x94 in Windows-1252 is interpreted as a string delimiter, breaking brace matching)
+
+3.9.52
+- Fixed: contextkit --gemini/--opencode/--copilot PS5.1 BOM crash - write JSON via temp file instead of pipe to avoid PS5.1 encoding corruption
+
+3.9.51
+- Fixed: install.ps1 PS5.1 parse crash (MissingEndCurlyBrace) — removed all em dashes and box-drawing chars (byte 0x94); removed identity.json creation block
+
+3.9.50
+- Fixed: PS5.1 parse crash - removed dead Get-MachineId function (identity.json) from ckc.ps1 and ck.ps1; byte 0x94 no longer present
+
+3.9.50
+- Fixed: PS5.1 parse crash (MissingEndCurlyBrace) — removed dead Get-MachineId/identity.json function from ckc.ps1 and ck.ps1; 0x94 byte no longer present
+
+3.9.49
+- Added: .cs and .xaml file indexing for .NET/C# projects (symbol extraction, keywords, summaries, graph edges)
+- Fixed: removed machine-ID tracking — identity.json no longer created, no license server pings
+- Fixed: C# nullable return types (Order?) now correctly extracted; comment-triggered false symbols eliminated
+
+3.9.48
+- Fixed: contextkit --opencode/--gemini/--copilot BOM crash — inline Python stdin reads now use utf-8-sig to handle PS5.1 pipe encoding
+
+3.9.47
+- Fixed: JSON files (identity.json, context-store.json, settings.json) now written without UTF-8 BOM on PS5.1 — use [System.IO.File]::WriteAllText instead of Set-Content -Encoding UTF8 (affects ckc.ps1, ck.ps1, contextkit.ps1, install.ps1)
+- Fixed: all Python JSON reads now use utf-8-sig — silently handles any existing BOM-encoded files for previous users
+
+3.9.46
+- Fixed: ckc.cmd and ck.cmd now validate local PS1 before running — if corrupted, auto-delete and re-download from R2 (self-heal without needing reinstall)
+- Fixed: bootstrap PS1 also validated before running — discarded if R2 returned HTML error page instead of PS1
+
+3.9.45
+- Fixed: removed all UTF-8 em dashes and BOM from PS1 files — PS5.1 Windows-1252 misread 0x94 as a right double-quote causing parser to report missing closing braces (root cause of all PS1 parse errors since 3.9.37)
+
+3.9.44
+- Fixed: all self-update downloads now use R2 as primary source (GitHub CDN as fallback) — prevents stale cached PS1 being written after update
+- Fixed: contextkit.cmd rewritten with atomic R2-first bootstrap (same pattern as ckc.cmd/ck.cmd)
+- Fixed: contextkit.ps1 self-update uses atomic R2-first download with GitHub fallback
+
+3.9.43
+- Fixed: cmd self-heal now works on PS5.1 Windows-1252 systems — R2 (trusted) uses plain size check, GitHub fallback uses ScriptBlock::Create with -Encoding UTF8; em dash bytes in PS1 comments were causing ScriptBlock::Create to reject the clean R2 file
+
+3.9.42
+- Fixed: ckc.cmd and ck.cmd now self-heal corrupted .ps1 files automatically on every run — atomic download, size check, and PS1 parse validation (ScriptBlock::Create) before replacing; R2-first so GitHub CDN cache can never serve a broken launcher again
+
+3.9.41
+- Fixed: ck.ps1 missing all three Windows crash fixes (atomic download, ripgrep outer try/catch, $resolvedProject null fallback) — dg was silently carrying the same bugs as dgc pre-3.9.40
+- Fixed: install.ps1 now downloads ckc.ps1/ck.ps1/contextkit.ps1 from R2 first (GitHub as fallback) — bypasses GitHub CDN cache so re-installs always get the latest version
+
+3.9.40
+- Fixed: self-update now downloads to .tmp file then moves atomically — prevents corrupt ckc.ps1 if network drops mid-download
+
+3.9.39
+- Fixed: $resolvedProject null crash on PowerShell 5.1 Windows — fallback to GetUnresolvedProviderPathFromPSPath when Get-Item/.FullName returns null
+
+3.9.38
+- Fixed: ripgrep auto-install no longer crashes dgc on Windows when winget throws a parameter binding error — falls back to warning instead
+
+3.9.37
+- Fixed: ripgrep (rg) now auto-installed on first run if missing (macOS: brew, Linux: apt/dnf/yum/pacman, Windows: winget/choco/scoop) — resolves fallback_rg "No such file or directory: rg" error
+
+3.9.36
+- Fixed: graph_read cap raised 4k→20k chars; turn budget raised 18k→60k — prevents double-reads of source files
+- Fixed: PHP symbol extractor now uses brace-counting for accurate line_end (was fixed +50 lines)
+- Fixed: PHP 8.1 enums now extracted as model symbols (enum keyword was missing from class regex)
+- Added: PHP symbol extraction in PyPI package (src/contextkit/graph_builder.py was missing PHP support entirely)
+
+3.9.35
+- Fixed: dg.exe conflict on Windows now self-heals on any contextkit invocation (dgc, dg, contextkit --cursor/gemini/opencode/copilot all remove stale dg.exe automatically)
+
+3.9.34
+- Fixed: contextkit --gemini on Windows wrote settings.json with UTF-8 BOM causing invalid JSON error; now written via Python (no BOM)
+- Fixed: contextkit --gemini / --opencode on Windows now show live install progress (was silently piped to Out-Null, looked frozen)
+- Fixed: contextkit --codex MCP tools empty — mcp-remote 0.1.x requires --allow-http for localhost (Mac/Linux and Windows)
+- Fixed: pip install contextkit on Windows created dg.exe conflicting with ck.cmd launcher; renamed internal entry point to dg-graph
+
+3.9.33
+- Fixed: Mac/Linux contextkit_launch.sh now accepts --flag style args (--claude, --opencode, etc.)
+- Added: Mac/Linux --opencode support (writes project opencode.json, launches opencode TUI)
+- Added: Mac/Linux --copilot support (writes .vscode/mcp.json, opens VS Code, keeps MCP alive)
+- Fixed: Windows --copilot writes .vscode/mcp.json via Python stdin (clean indent=2 JSON)
+
+3.9.32
+- Fixed: opencode.json invalid JSON from ConvertTo-Json alignment spaces; now uses Python json.dump
+
+3.9.31
+- Fixed: contextkit --opencode auto-install used wrong npm package; correct package is opencode-ai (works on Mac, Linux, and Windows)
+
+3.9.30
+- Fixed: bash contextkit launcher missing --opencode and --copilot flags (macOS/Linux)
+
+3.9.29
+- Added: contextkit --opencode support (writes project opencode.json, launches opencode TUI)
+- Added: contextkit --copilot support (writes .vscode/mcp.json, opens VS Code)
+
+3.9.28
+- Fixed: MCP server crash on Windows — removed `from __future__ import annotations`; string annotations bypassed mcp's get_origin guard causing issubclass() TypeError
+
+3.9.27
+- Fixed: MCP server crash on Windows — added `from __future__ import annotations` to fix TypeError: issubclass() arg 1 must be a class with older mcp library versions
+
+3.9.26
+- Fixed: context-store.json bloat — per-bucket pruning allowed unbounded growth across many files; added global per-type caps (decision:20, fact:20, task/next/blocker:10) and lowered total cap 200→150
+- Fixed: graph_add_memory entries used "type" key instead of "kind", bypassing pruning buckets on first write
+
+3.9.25
+- Fixed: graph_add_memory missing from PyPI package (src/contextkit/mcp_graph_server.py was stale)
+
+3.9.24
+- Fixed: PyPI wheel was Python 3.14-only (Cython in build-deps); now universal py3-none-any wheel
+
+3.9.23
+- Fixed: mcp_graph_server.py never updated on auto-update (missing from update list)
+
+3.9.22
+- Fixed: contextkit restart after auto-update crashed (@(expr) passes array not splat in PowerShell)
+
+3.9.21
+- Fixed: contextkit --cursor MCP config written empty on first run (Hashtable vs PSCustomObject bug)
+
+3.9.20
+- Fixed: contextkit scan always failed on Windows (graph_builder.exe passed to Python instead of run directly)
+- Fixed: contextkit MCP server healthcheck always timed out (HTTP / 404 -> use TCP connect instead)
+- Fixed: ErrorActionPreference Stop caused silent crashes in contextkit.ps1
+
+3.9.19
+- Fixed: contextkit --cursor/--gemini on Windows: mcp_graph_server.py not found in ~/.contextkit
+
+3.9.18
+- Fixed: contextkit --cursor/--gemini crash on Windows (Start-Process same stdout/stderr file)
+- Fixed: contextkit unknown flag (e.g. --code) no longer treated as project path
+
+3.9.17
+- Fixed: contextkit command not found on Mac/Linux after upgrading from pre-3.9.13 install
+- Fixed: context-store.json bloat — new graph_add_memory MCP tool with auto-prune; in-memory cache
+- Fixed: CLAUDE.md Context Store instruction now uses graph_add_memory (stops unbounded file growth)
+- Fixed: dgc upgrade surgically patches Context Store section only (v10→v11), preserves user edits
+
+3.9.16
+- Fixed: contextkit.ps1 double-BOM causing "assignment expression not valid" on Windows
+
+3.9.15
+- Fixed: contextkit.ps1 parse error on Windows (UTF-8 BOM + CRLF + remove em-dash)
+
+3.9.14
+- Fixed: contextkit --cursor Ctrl+C now exits cleanly on first press (macOS/Linux)
+- Fixed: ckc.cmd/ck.cmd now always bootstrap contextkit.cmd+ps1 with R2 fallback
+- Fixed: removed version.txt pre-download from .cmd so PS1 update block fires correctly
+
+3.9.13
+- Fixed: install.ps1 and install.sh now download contextkit command on fresh install
+- Fixed: Windows users can now use contextkit --cursor / --gemini after reinstall
+
+3.9.12
+- Added: contextkit command — launch Claude, Codex, Cursor, or Gemini with contextkit context
+- Added: contextkit --help, auto-update for all tools, first-run command guide
+- Added: Cursor IDE support with MCP config auto-write and Gemini CLI auto-install
+
+3.9.11
+- Fixed: dgc --resume now works on Windows PowerShell (double-dash flag parsing)
+3.9.10
+- Removed: error telemetry — install and launcher errors are no longer reported to the server
+- Fixed: token counter always shows correct port 8899 (stale port file no longer read)
+- Fixed: old token-counter-mcp stopped gracefully (SIGTERM) instead of force-killed
+
+3.9.8
+- Fixed: running dg and dgc together no longer kills each other's MCP server
+
+3.9.7
+- Fixed: settings.local.json now merges instead of overwriting (preserves user permissions/hooks)
+- Fixed: dgc --resume now works on Windows; resume hint shown at end of session
+
+3.9.6
+- Fixed: dgc now appends policy to existing CLAUDE.md instead of overwriting it (macOS, Linux, Windows)
+
+3.9.5
+- Fixed: token counter dashboard always reclaims port 8899 (macOS, Linux, Windows)
+
+3.9.4
+- Added: Unreal Engine 5 support (UCLASS, USTRUCT, UFUNCTION, UENUM macros) in graph_builder
+- Fixed: dgc not found on macOS bash — install.sh now writes to ~/.bash_profile
+
+3.9.3
+- Fixed: dgc no longer hangs on Cloudflare-blocked ISPs (Turkey etc) — CLAUDE.md uses hardcoded fallback
+- Added: C and C++ language support (.c .cpp .h .hpp) in graph_builder
+- Fixed: session resume hint now handles case-insensitive project paths (macOS)
+
+3.9.2
+- Fixed: dgc no longer hangs on VPN during self-update
+- Added: dgc --resume SESSION_ID to resume sessions with contextkit active
+- Session resume hint shown automatically at end of each session
+
+3.9.1
+- Fixed: self-update download no longer hangs indefinitely on slow connections
+- Added --max-time 30 to update curl calls
+
+3.9.0
+- Added Rust, Java, C#, Ruby, PHP, Kotlin language support to graph_builder
