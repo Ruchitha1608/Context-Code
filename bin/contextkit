@@ -1,0 +1,125 @@
+#!/usr/bin/env bash
+# contextkit — ContextKit launcher with AI tool selection
+#
+# Usage:
+#   contextkit [path] --claude    # Claude Code  (same as ckc)
+#   contextkit [path] --codex     # OpenAI Codex (same as ck)
+#   contextkit [path] --cursor    # Cursor IDE
+#   contextkit [path] --gemini    # Google Gemini CLI
+#
+# The tool flag can come before or after the path.
+# Flags can be written with or without --  (e.g. cursor or --cursor).
+# Default tool: --claude.  Default path: current directory.
+#
+# Examples:
+#   contextkit /path/to/project --claude
+#   contextkit /path/to/project --cursor
+#   contextkit /path/to/project gemini
+#   graperoot . --codex
+#   contextkit /path/to/project --claude --resume <session-id>
+
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# ── Help ──────────────────────────────────────────────────────────────────────
+_show_help() {
+  cat <<'HELP'
+
+  contextkit — ContextKit AI tool launcher
+
+  Usage:
+    contextkit [path] <tool> [options]
+
+  Tools:
+    --claude    Claude Code   (shorthand: ckc [path])
+    --codex     OpenAI Codex  (shorthand: ck  [path])
+    --cursor    Cursor IDE
+    --gemini    Google Gemini CLI
+    --opencode  OpenCode
+    --copilot   GitHub Copilot (VS Code)
+
+  Options:
+    --resume <id>    Resume a previous claude / codex session
+    --help, -h, ?    Show this help
+
+  Examples:
+    graperoot . --claude
+    contextkit /my/project --cursor
+    contextkit /my/project --gemini
+    contextkit /my/project --opencode
+    contextkit /my/project --copilot
+    contextkit /my/project --claude --resume <session-id>
+    ckc .                          # same as graperoot . --claude
+    ck  .                          # same as graperoot . --codex
+
+HELP
+  exit 0
+}
+
+for _a in "$@"; do
+  case "$_a" in --help|-h|\?) _show_help ;; esac
+done
+
+ASSISTANT="claude"   # default
+PROJECT=""
+PASSTHROUGH=()
+
+_VALID_TOOLS="claude codex cursor gemini opencode copilot"
+_TOOL_SET=false
+
+ARGS=("$@")
+i=0
+while (( i < ${#ARGS[@]} )); do
+  arg="${ARGS[$i]}"
+  case "$arg" in
+    --claude|claude)     ASSISTANT="claude";   _TOOL_SET=true ;;
+    --codex|codex)       ASSISTANT="codex";    _TOOL_SET=true ;;
+    --cursor|cursor)     ASSISTANT="cursor";   _TOOL_SET=true ;;
+    --gemini|gemini)     ASSISTANT="gemini";   _TOOL_SET=true ;;
+    --opencode|opencode) ASSISTANT="opencode"; _TOOL_SET=true ;;
+    --copilot|copilot)   ASSISTANT="copilot";  _TOOL_SET=true ;;
+    --toolname)
+      PASSTHROUGH+=("$arg")
+      if (( i + 1 < ${#ARGS[@]} )) && [[ "${ARGS[$((i + 1))]}" != --* ]]; then
+        i=$((i + 1))
+        PASSTHROUGH+=("${ARGS[$i]}")
+      fi
+      ;;
+    --toolname=*)
+      PASSTHROUGH+=("$arg")
+      ;;
+    *)
+      # First non-flag positional arg is the project path
+      if [[ -z "$PROJECT" && "$arg" != --* ]]; then
+        PROJECT="$arg"
+      else
+        PASSTHROUGH+=("$arg")
+      fi
+      ;;
+  esac
+  i=$((i + 1))
+done
+
+# Catch typos like --claud, --gemi, --curs — check if any passthrough arg looks
+# like a misspelled tool flag (starts with -- and is not a known claude CLI flag)
+if ! $_TOOL_SET; then
+  for _pt in "${PASSTHROUGH[@]+"${PASSTHROUGH[@]}"}"; do
+    _bare="${_pt#--}"
+    if [[ "$_pt" == --* && "$_bare" != *=* ]]; then
+      # Check if it's close to a valid tool name (prefix match)
+      for _t in $_VALID_TOOLS; do
+        if [[ "$_t" == "$_bare"* || "$_bare" == "$_t"* ]]; then
+          echo "[contextkit] Unknown tool '--$_bare'. Did you mean '--$_t'?" >&2
+          echo "[contextkit] Valid tools: $_VALID_TOOLS" >&2
+          exit 2
+        fi
+      done
+    fi
+  done
+fi
+
+[[ -z "$PROJECT" ]] && PROJECT="$(pwd)"
+
+exec "$SCRIPT_DIR/contextkit_launch.sh" "$ASSISTANT" "$PROJECT" \
+  "${PASSTHROUGH[@]+"${PASSTHROUGH[@]}"}"
