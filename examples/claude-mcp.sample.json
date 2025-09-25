@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "contextkit": {
+      "command": "python3",
+      "args": [
+        "/path/to/contextkit-dashboard/mcp_graph_server.py"
+      ],
+      "env": {
+        "DG_BASE_URL": "http://127.0.0.1:8787",
+        "DUAL_GRAPH_PROJECT_ROOT": "/path/to/your/project"
+      }
+    }
+  }
+}
