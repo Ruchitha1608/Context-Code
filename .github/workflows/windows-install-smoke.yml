@@ -1,0 +1,52 @@
+name: Windows install smoke test
+
+on:
+  workflow_dispatch:
+
+jobs:
+  install-smoke:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Scoop
+        shell: pwsh
+        run: |
+          Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+          irm get.scoop.sh | iex
+
+      - name: Install deps
+        shell: pwsh
+        run: |
+          scoop install python311 nodejs
+          python --version
+          node --version
+          npm --version
+
+      - name: Install Claude Code
+        shell: pwsh
+        run: |
+          npm install -g @anthropic-ai/claude-code
+          claude --version
+
+      - name: Install contextkit from bucket
+        shell: pwsh
+        run: |
+          scoop bucket add contextkit https://github.com/Ruchitha1608/scoop-contextkit
+          scoop update
+          scoop install contextkit
+
+      - name: Smoke test ckc
+        shell: pwsh
+        run: |
+          $proj = Join-Path $env:RUNNER_TEMP "ckc-smoke"
+          New-Item -ItemType Directory -Force -Path $proj | Out-Null
+          Set-Content -Path (Join-Path $proj "README.md") -Value "# Smoke"
+          & ckc $proj
+
+      - name: Report installed version
+        shell: pwsh
+        run: |
+          $ver = Get-Content "$env:USERPROFILE\.contextkit\version.txt" -Raw
+          Write-Host "contextkit version: $ver"
