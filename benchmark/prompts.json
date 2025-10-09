@@ -1,0 +1,77 @@
+[
+  {
+    "id": 1,
+    "category": "code_explanation",
+    "prompt": "Explain the restaurant onboarding flow end-to-end. Name the exact frontend pages, backend endpoints, and database models involved. Be specific with file paths."
+  },
+  {
+    "id": 2,
+    "category": "code_explanation",
+    "prompt": "Explain how customer authentication works in this codebase. Trace the flow from login form submission through token generation and storage. Name all files involved."
+  },
+  {
+    "id": 3,
+    "category": "code_explanation",
+    "prompt": "Explain the WhatsApp webhook integration. How does an incoming WhatsApp message get processed, stored, and trigger notifications? List all files in the chain."
+  },
+  {
+    "id": 4,
+    "category": "bug_fix",
+    "prompt": "A restaurant owner reports that updating their location on the settings page silently fails — the form submits but the old address persists on refresh. Diagnose the likely cause and identify the exact files to fix."
+  },
+  {
+    "id": 5,
+    "category": "bug_fix",
+    "prompt": "Customers report that their order history page sometimes shows orders from other customers. Identify the most likely backend files and endpoints where this data leakage could originate."
+  },
+  {
+    "id": 6,
+    "category": "bug_fix",
+    "prompt": "The admin dashboard analytics endpoint returns a 500 error when a restaurant has zero orders. Trace the analytics calculation code and identify where a division-by-zero or null reference might occur."
+  },
+  {
+    "id": 7,
+    "category": "feature_add",
+    "prompt": "Design a restaurant menu item bulk import feature that accepts a CSV file. List which existing files need modification, what new files are needed, and how it integrates with the current menu management system."
+  },
+  {
+    "id": 8,
+    "category": "feature_add",
+    "prompt": "Design a customer loyalty points system. Identify where points should be earned (order completion), stored (database model), displayed (customer portal), and redeemed (checkout flow). Map to existing files."
+  },
+  {
+    "id": 9,
+    "category": "feature_add",
+    "prompt": "Design a real-time order tracking feature for the customer portal. Identify the existing WebSocket infrastructure, the order status model, and which frontend components need new tracking UI."
+  },
+  {
+    "id": 10,
+    "category": "refactoring",
+    "prompt": "The API client code is duplicated across the restaurant portal and customer portal. Identify all API client/helper files in both frontends and propose a shared module structure."
+  },
+  {
+    "id": 11,
+    "category": "refactoring",
+    "prompt": "Identify all authentication-related middleware in the backend. Are there redundant auth checks? Propose a consolidated middleware chain with the exact files to modify."
+  },
+  {
+    "id": 12,
+    "category": "architecture",
+    "prompt": "Evaluate the current database model structure. Identify all SQLAlchemy models, their relationships, and any missing indexes or N+1 query risks in the API endpoints that use them."
+  },
+  {
+    "id": 13,
+    "category": "architecture",
+    "prompt": "Map the complete notification system architecture. How do notifications get created, stored, delivered (push/websocket/email), and displayed? Identify gaps in the current implementation."
+  },
+  {
+    "id": 14,
+    "category": "debugging",
+    "prompt": "The restaurant portal loads slowly on initial page load. Identify the main data-fetching hooks, their API calls, and which ones might be making redundant or waterfall requests on mount."
+  },
+  {
+    "id": 15,
+    "category": "debugging",
+    "prompt": "WebSocket connections are dropping intermittently for restaurant users. Identify the WebSocket setup code in both frontend and backend, the reconnection logic, and potential causes for disconnections."
+  }
+]
