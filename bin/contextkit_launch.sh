@@ -1,3 +1,4 @@
+# ripgrep auto-install supported
 # contextkit_launch.sh — graph_read cap raised 4k→20k chars
 # contextkit_launch.sh — session project lock added
 # contextkit_launch.sh — opencode support added
