@@ -1,3 +1,4 @@
+# stdio MCP transport added
 # dual_graph_launch.sh — C# and .xaml file indexing added
 # dual_graph_launch.sh — rate limit failover block added
 # dual_graph_launch.sh — PHP symbol extraction added
