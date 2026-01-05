@@ -1,3 +1,4 @@
+# atomic self-update download
 # dg.ps1 — atomic download for self-update
 # dg - Codex CLI + contextkit MCP launcher (PowerShell)
 param(
