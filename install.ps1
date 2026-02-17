@@ -1,3 +1,4 @@
+# ARM64 compiled wheel support
 # install.ps1 — ARM64 + prerequisite checks compiled wheel support
 try {
     # ContextKit one-time setup for Windows
