@@ -1,3 +1,4 @@
+# C# and .xaml file indexing
 # opencode support added
 # session project lock added
 # ripgrep auto-install supported
