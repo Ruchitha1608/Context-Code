@@ -1,3 +1,4 @@
+# audit debt score fixed
 #!/usr/bin/env python3
 """Contextkit Vibe Code Auditor.
 
