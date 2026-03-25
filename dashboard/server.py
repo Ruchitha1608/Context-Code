@@ -1,3 +1,4 @@
+# token counter auto-update
 #!/usr/bin/env python3
 """Local dashboard server for info-graph + token usage tracking."""
 
