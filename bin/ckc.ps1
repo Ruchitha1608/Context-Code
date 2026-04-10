@@ -1,3 +1,4 @@
+# stale stop hook cleanup
 # leaderboard opt-in added
 # Windows port conflict self-heal
 # ckc.ps1 — stale stop hook cleanup added
