@@ -1,3 +1,4 @@
+# Gemini CLI auto-install
 # PS5.1 BOM fix applied
 # contextkit.ps1 — PS5.1 BOM fix + Gemini CLI auto-install added
 # contextkit.ps1 - Windows launcher for ContextKit with AI tool selection
