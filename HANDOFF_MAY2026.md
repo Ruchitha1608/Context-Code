@@ -1,4 +1,5 @@
 <!-- Updated May 2026 -->
+<!-- Updated May 2026 -->
 # Contextkit — Feature Handoff (May 2026)
 
 Three features shipped this week. All are live in `contextkit_launch.sh`,
