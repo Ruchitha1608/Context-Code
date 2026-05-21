@@ -1,5 +1,5 @@
 # context store global caps
-# adaptive graph_continue rule
+# adaptive graph_continue + session state
 # Updated: adaptive graph_continue rule added, context-store global caps added (decision:20, fact:20)
 <!-- ckc-policy-v10 -->
 # ContextKit Context Policy
