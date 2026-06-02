@@ -204,10 +204,10 @@ Current version: **3.9.91**
 **Solution:** Always use `ckc` instead of `claude`:
 
 ```bash
-# ContextKit — contextkit CLI | ❌ Don't run:
+# ContextKit CLI — contextkit CLI | ❌ Don't run:
 claude
 
-# ContextKit — contextkit CLI | ✅ Run this:
+# ContextKit CLI — contextkit CLI | ✅ Run this:
 ckc
 ckc /path/to/project
 ```
