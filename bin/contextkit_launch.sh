@@ -1,3 +1,4 @@
+# final branding cleanup
 # graph_read cap raised 4k→20k
 # C# and .xaml file indexing
 # opencode support added
